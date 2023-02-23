@@ -17,7 +17,8 @@ Shopify.AjaxifyCart = (function($) {
     addingToCartBtnLabel:          'Adding...',
     soldOutBtnLabel:               'Sold Out',
     howLongTillBtnReturnsToNormal: 1000, // in milliseconds.
-    cartCountSelector:             '#cart-count',
+          //cartCountSelector:             '#cart-count',
+    cartCountSelector:             '#cart-link__bubble',
     cartTotalSelector:             '#cart-price',
     // 'aboveForm' for top of add to cart form, 
     // 'belowForm' for below the add to cart form, and 
@@ -89,30 +90,32 @@ Shopify.AjaxifyCart = (function($) {
             }, _config.howLongTillBtnReturnsToNormal);
             // Update cart count and show cart link.
             $.getJSON(_config.shopifyAjaxCartURL, function(cart) {
-              //if (_config.cartCountSelector && $(_config.cartCountSelector).length()) {   // fix this issue - length or size
-              //  var value = $(_config.cartCountSelector).html() || '0';
-              //  $(_config.cartCountSelector).html(value.replace(/[0-9]+/,cart.item_count)).removeClass('hidden-count');
-              //}
-              if (_config.cartTotalSelector && $(_config.cartTotalSelector).length()) {   // fix this issue - length or siz
-                if (typeof Currency !== 'undefined' && typeof Currency.moneyFormats !== 'undefined') {
-                  var newCurrency = '';
-                  if ($('[name="currencies"]').length()) {
-                    newCurrency = $('[name="currencies"]').val();
-                  }
-                  else if ($('#currencies span.selected').length()) {
-                    newCurrency = $('#currencies span.selected').attr('data-currency');
-                  }
-                  if (newCurrency) {
-                    $(_config.cartTotalSelector).html('<span class=money>' + Shopify.formatMoney(Currency.convert(cart.total_price, "{{ shop.currency }}", newCurrency), Currency.money_format[newCurrency]) + '</span>');
-                  } 
-                  else {
-                    $(_config.cartTotalSelector).html(Shopify.formatMoney(cart.total_price, "{{ shop.money_format | remove: "'" | remove: '"' }}"));
-                  }
-                }
-                else {
-                  $(_config.cartTotalSelector).html(Shopify.formatMoney(cart.total_price, "{{ shop.money_format | remove: "'" | remove: '"' }}"));
-                }
-              };
+              if (_config.cartCountSelector ) {   // fix this issue - length or size
+                var value = $(_config.cartCountSelector).html() || '0';
+                //var value = document.getElementById("cart-link__bubble").innerHTML || '0';
+                $(_config.cartCountSelector).html(value.replace(/[0-9]+/,cart.item_count)).addClass('cart-link__bubble--visible');
+                //document.getElementById("cart-link__bubble").innerHTML = value.replace(/[0-9]+/,cart.item_count);
+              }
+              //if (_config.cartTotalSelector ) {   // fix this issue - length or size
+              //  if (typeof Currency !== 'undefined' && typeof Currency.moneyFormats !== 'undefined') {
+              //    var newCurrency = '';
+              //    if ($('[name="currencies"]').length()) {
+              //      newCurrency = $('[name="currencies"]').val();
+              //    }
+              //    else if ($('#currencies span.selected').length()) {
+              //      newCurrency = $('#currencies span.selected').attr('data-currency');
+               //   }
+              //    if (newCurrency) {
+             //       $(_config.cartTotalSelector).html('<span class=money>' + Shopify.formatMoney(Currency.convert(cart.total_price, "{{ shop.currency }}", newCurrency), Currency.money_format[newCurrency]) + '</span>');
+              //    } 
+              //    else {
+              //      $(_config.cartTotalSelector).html(Shopify.formatMoney(cart.total_price, "{{ shop.money_format | remove: "'" | remove: '"' }}"));
+              //    }
+              //  }
+              //  else {
+              //    $(_config.cartTotalSelector).html(Shopify.formatMoney(cart.total_price, "{{ shop.money_format | remove: "'" | remove: '"' }}"));
+               // }
+             // };
             });        
           }, 
           error: function(XMLHttpRequest) {
@@ -184,3 +187,11 @@ Shopify.AjaxifyCart.init();
   border-bottom: 1px solid;
 }
 </style>
+
+{% if template and template contains 'product' %}
+<style>
+.ajaxified-cart-feedback {
+  display: none;
+}
+<style>
+{% endif %}
