@@ -188,10 +188,10 @@ Shopify.AjaxifyCart.init();
 }
 </style>
 
-{% if template and template contains 'product' %}
-<style>
-.ajaxified-cart-feedback {
-  display: none;
-}
-<style>
+{% if template contains 'product' %}
+  <style>
+    .ajaxified-cart-feedback {
+      display: none !important;
+    }
+  </style>
 {% endif %}
