@@ -20,6 +20,7 @@
       howLongTillBtnReturnsToNormal: 1000, // in milliseconds.
             //cartCountSelector:             '#cart-count',
       cartCountSelector:             '#cart-link__bubble',
+      cartCountSelectorMobile:       '#cart-link__bubble-mobile',
       cartTotalSelector:             '#cart-price',
       // 'aboveForm' for top of add to cart form, 
       // 'belowForm' for below the add to cart form, and 
@@ -92,9 +93,12 @@
               // Update cart count and show cart link.
               $.getJSON(_config.shopifyAjaxCartURL, function(cart) {
                 if (_config.cartCountSelector ) {   // fix this issue - length or size
+                console.log('log 60) ajaxify');
+                console.log('log 61) cart.item_count = '+ cart.item_count);
                   var value = $(_config.cartCountSelector).html() || '0';
                   //var value = document.getElementById("cart-link__bubble").innerHTML || '0';
                   $(_config.cartCountSelector).html(value.replace(/[0-9]+/,cart.item_count)).addClass('cart-link__bubble--visible');
+                  $(_config.cartCountSelectorMobile).html(value.replace(/[0-9]+/,cart.item_count)).addClass('cart-link__bubble--visible');
                   //document.getElementById("cart-link__bubble").innerHTML = value.replace(/[0-9]+/,cart.item_count);
                 }
                 //if (_config.cartTotalSelector ) {   // fix this issue - length or size
