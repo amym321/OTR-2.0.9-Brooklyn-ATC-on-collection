@@ -151,9 +151,22 @@
     </a>
 
 
-{% comment %} start ATC button - am {% endcomment %}
-      <form method="post" action="/cart/add">
-        {% if product.title contains 'Reset Tool' or product.title contains 'reset tool'%}
+    {% comment %} start ATC button - am {% endcomment %}
+    <form action="/cart/add" method="post">
+      {% assign current_variant = product.selected_or_first_available_variant %}
+
+      {% if product.title contains 'Reset Tool' or product.title contains 'reset tool'%}
+
+        {% comment %} new ATC button - am {% endcomment %}
+        {% if product.variants.size == 1 %}
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+        {% else %}
+          <select name="id" class="atc-btn">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}">{{ variant.title }}</option>
+            {% endfor %}
+          </select>
+        {% endif %}
 
         {% if product.available  %}
           <h5 id="addToCartSoldOut" style="text-align: center; margin: 0 auto; display:none;">SOLD OUT</h5>
@@ -169,41 +182,10 @@
           </div>
 
 
-          {% comment %} use this btn if possible {% endcomment %}
-          {% comment %} <div class="product-single__add-to-cart product-single__add-to-cart--full-width">
-            <input  type="submit" value="Add to cart" class="btn btn--add-to-cart" />
-          </div>  {% endcomment %}
-
-
           {% if product.available %}
-
-          {% comment %} this btn for testing Sold Out / Waitlist {% endcomment %}
-            {% comment %} <button type="submit" name="add" id="AddToCart--{{ section.id }}" class="btn btn--add-to-cart{% if section.settings.enable_payment_button %} btn--secondary-accent{% endif %}" onclick="dataLayer.push({ 'ecommerce': null });dataLayer.push({
-              'event': 'add_to_cart',
-                'ecommerce': {
-                    'currency': '{{ shop.currency }}',
-                    'value': '{{ product.price | times: 0.01}}',
-                'items': [{
-                  'item_id': '{{ product.id }}',
-                  'item_name': '{{ product.title }}',
-                  'item_brand': '{{ product.vendor }}',
-                  'item_category': '{{ product.type }}',
-                  'item_variant': '{{ product.selected_variant.sku }}',
-                  'currency': '{{ shop.currency }}',
-                  'price': '{{ product.price | times: 0.01}}'
-                }]
-              }
-            });">
-              <span class="btn__text">
-                  {{ 'products.product.add_to_cart' | t }}
-              </span>
-            </button>  {% endcomment %}
-
-            {% comment %} use this btn if possible {% endcomment %}
             <div class="product-single__add-to-cart product-single__add-to-cart--full-width">
-              <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-              <input type="submit" value="Add to cart" class="btn btn--add-to-cart" />
-            </div> 
+              <button type="submit" name="add" class="btn btn--add-to-cart">Add to cart</button>
+            </div>
 
             <a id="addToCartJoinWaitlist" style=" display:none;" class="btn btn--add-to-cart{% if section.settings.enable_payment_button %} btn--secondary-accent{% endif %}" href="https://forms.monday.com/forms/2585b7aaae78086490d275b96f07e540?r=use1"><span>Join Waitlist</span></a>
 
@@ -218,25 +200,10 @@
 
           {% endif %}
 
-
       {% endif %}
-
       </div>
-
-
-      </form>
+    </form>
     
-      {% comment %} <form method="post" action="/cart/add">
-        <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
-        <div class="qty-atc-container">
-          <div class="product-single__quantity">
-            <input min="1" type="number" id="quantity" name="quantity" value="1"/>
-          </div>
-          <div class="product-single__add-to-cart product-single__add-to-cart--full-width">
-            <input type="submit" value="Add to cart" class="btn" />
-          </div>
-        </div>
-      </form>  {% endcomment %}
 
 
 {% comment %} end ATC button - am {% endcomment %}
